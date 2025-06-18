@@ -11,14 +11,16 @@ jobs:
       APP_ENV: ${{ vars.APP_ENV }}
     steps:
       - name: Exibir ambiente de execução
-        run: echo "Ambiente: $APP_ENV"
+        run: |
+          echo "Ambiente: $APP_ENV"
 
   variaveis:
     name: Job 2 - Usando context.vars diretamente
     runs-on: ubuntu-latest
     steps:
       - name: Exibir e-mail de suporte
-        run: echo "Contato: ${{ vars.SUPPORT_EMAIL }}"
+        run: |
+          echo "Contato: ${{ vars.SUPPORT_EMAIL }}"
 
   segredo:
     name: Job 3 - Usando context.secrets com env
@@ -27,5 +29,6 @@ jobs:
       - name: Simular uso da chave de API
         env:
           API_KEY: ${{ secrets.API_KEY }}
-        run: echo "Chave de API recebida e disponível em ambiente"
+        run: |
+          echo "Chave de API recebida e disponível em ambiente"
 
