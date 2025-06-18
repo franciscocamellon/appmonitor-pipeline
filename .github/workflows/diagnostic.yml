@@ -1,0 +1,49 @@
+name: Diagnóstico automatizado
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-variables:
+    name: Diagnóstico de Variáveis Obrigatórias
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validar APP_ENV e API_KEY
+        run: |
+          echo "Iniciando diagnóstico das variáveis obrigatórias..."
+
+          if [ -z "${{ vars.APP_ENV }}" ]; then
+            echo "::error::A variável APP_ENV não está definida (vars)"
+            VAR1_OK=false
+          else
+            echo "APP_ENV está definida como: ${{ vars.APP_ENV }}"
+            VAR1_OK=true
+          fi
+
+          if [ -z "${{ secrets.API_KEY }}" ]; then
+            echo "::error::A variável secreta API_KEY não está definida"
+            VAR2_OK=false
+          else
+            echo "::add-mask::${{ secrets.API_KEY }}"
+            echo "API_KEY está definida (valor mascarado)"
+            VAR2_OK=true
+          fi
+
+          if [ "$VAR1_OK" = false ] || [ "$VAR2_OK" = false ]; then
+            echo "::error::Diagnóstico falhou: variáveis obrigatórias ausentes."
+            exit 1
+          fi
+
+          echo "Diagnóstico concluído com sucesso. Todas as variáveis estão presentes."
+
+      - name: Gerar resumo do diagnóstico
+        if: always()
+        run: |
+          echo "### Resultado do Diagnóstico de Variáveis" >> $GITHUB_STEP_SUMMARY
+          echo "- APP_ENV: ${{ vars.APP_ENV }}" >> $GITHUB_STEP_SUMMARY
+          echo "- API_KEY: $(if [ -z "${{ secrets.API_KEY }}" ]; then echo 'Ausente'; else echo 'Presente'; fi)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Sugestões:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Certifique-se de que \`APP_ENV\` está definida em \`Settings > Variables\`." >> $GITHUB_STEP_SUMMARY
+          echo "- Verifique se \`API_KEY\` foi criada corretamente em \`Settings > Secrets\` e está com nome correto." >> $GITHUB_STEP_SUMMARY
+
