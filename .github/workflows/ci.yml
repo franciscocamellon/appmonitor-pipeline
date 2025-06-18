@@ -62,5 +62,5 @@ jobs:
           echo "### CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Ambiente: ${{ runner.os }}" >> $GITHUB_STEP_SUMMARY
           echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Status: ✅ Todos os steps executados com sucesso" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: Todos os steps executados com sucesso" >> $GITHUB_STEP_SUMMARY
           echo "- Artefato: [Download report.zip](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
